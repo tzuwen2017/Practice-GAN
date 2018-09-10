@@ -193,24 +193,8 @@ def normalize(train):
 def Re_normalize(x,mean, maxmin):    
     return x * maxmin + mean
 
-'''
-start='2017-01-01'
-end='2017-03-01'
-    
-settleurl = "http://140.113.72.11:5984/market/_design/futures/_list/settlement/tx?startkey=[\""+start+"\"]&endkey=[\""+end+"\"]"
-req = requests.get(settleurl)
-settlelist = req.text[1:-1].split(',\n')[:-1]
-    
-df = pd.DataFrame([])
-for key in settlelist:
-    url = 'http://140.113.72.11:5984/market/_design/futures/_list/kbar/tx?keys=['+key+']&tf=1'
-    req2 = requests.get(url)
-    df = df.append(pd.read_csv(StringIO(req2.text)),ignore_index=True)
-
-df.to_pickle("C:/Users/WuZihWun/Desktop/tx170101_170301.pkl")
-'''
 #從存起來的地方載入
-txdata = pd.read_pickle("C:/Users/WuZihWun/Desktop/tx170101_170301.pkl")
+txdata = pd.read_pickle("./tx170101_170301.pkl")
     
 tx_x_data, x_mean, x_maxmin = normalize(txdata.loc[:,['Open','High','Low','Close','Volume']])
 tx_y_data, y_mean, y_maxmin = normalize(txdata.loc[:,['Close']])
@@ -255,5 +239,3 @@ test_y_combined = y_combined[(18000-m-n+1)*20:(18000-m-n+1)*21,:]
 
 ganfd = GANFD()
 ganfd.train(epochs=500)
-
-
